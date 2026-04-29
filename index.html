@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduVerse — Geleceği Öğren</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#000;--surface:#0a0a0c;--card:#13131a;--border:#1f2028;--accent:#4d8eff;--accent2:#2d6fe8;--mint:#4fd1a5;--gold:#ffb347;--text:#f0f0f3;--text2:#a8acb8;--text3:#6b7080;--shadow:0 12px 40px rgba(0,0,0,.5);}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden;}
+a{text-decoration:none;color:inherit;}
+button{font-family:inherit;cursor:pointer;border:none;outline:none;}
+input,textarea{font-family:inherit;outline:none;border:none;}
+ul{list-style:none;}
+img{max-width:100%;display:block;}
+.display{font-family:'Syne',sans-serif;font-weight:800;line-height:1.05;letter-spacing:-.02em;}
+.heading{font-family:'Syne',sans-serif;font-weight:700;line-height:1.2;letter-spacing:-.01em;}
+.label{font-family:'Syne',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;}
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+::-webkit-scrollbar-thumb:hover{background:var(--accent);}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:64px;display:flex;align-items:center;padding:0 5vw;background:rgba(0,0,0,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(–border);}
+.logo{font-family:‘Syne’,sans-serif;font-weight:800;font-size:1.4rem;letter-spacing:-.03em;color:#fff;display:flex;align-items:center;gap:8px;}
+.logo .dot{width:8px;height:8px;border-radius:50%;background:var(–accent);box-shadow:0 0 14px var(–accent);animation:pulse 2.5s ease-in-out infinite;}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.4);opacity:.6}}
+.nav-links{display:flex;align-items:center;gap:2px;margin-left:32px;}
+.nav-links a{font-size:.85rem;font-weight:500;color:var(–text2);padding:6px 12px;border-radius:8px;transition:all .18s;}
+.nav-links a:hover{background:var(–card);color:var(–text);}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
+.btn-ghost{font-size:.82rem;font-weight:600;color:var(–text);padding:7px 14px;border-radius:9px;border:1.5px solid var(–border);background:transparent;display:flex;align-items:center;gap:5px;transition:all .18s;}
+.btn-ghost:hover{border-color:var(–accent);color:var(–accent);}
+.btn-primary{font-size:.82rem;font-weight:700;color:#fff;padding:8px 18px;border-radius:9px;background:var(–accent);box-shadow:0 4px 14px rgba(77,142,255,.4);transition:all .18s;}
+.btn-primary:hover{background:var(–accent2);transform:translateY(-1px);}
+.nav-toggle{display:none;flex-direction:column;gap:4px;padding:8px;background:none;}
+.nav-toggle span{width:22px;height:2px;background:var(–text);border-radius:2px;}
+
+/* MOBILE MENU */
+.mob-menu{position:fixed;top:64px;left:0;right:0;z-index:900;background:var(–surface);border-bottom:1px solid var(–border);padding:16px 5vw;display:flex;flex-direction:column;gap:6px;transform:translateY(-110%);transition:transform .3s;box-shadow:var(–shadow);}
+.mob-menu.open{transform:translateY(0);}
+.mob-menu a{padding:11px 14px;border-radius:9px;font-weight:500;color:var(–text2);transition:all .18s;}
+.mob-menu a:hover{background:var(–card);color:var(–text);}
+.mob-menu .sep{height:1px;background:var(–border);margin:4px 0;}
+.mob-menu .btn-primary{text-align:center;color:#fff;}
+
+/* HERO */
+.hero{min-height:100vh;padding:110px 5vw 70px;display:flex;align-items:center;position:relative;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse 60% 50% at 70% 40%,rgba(77,142,255,.18) 0%,transparent 70%),radial-gradient(ellipse 40% 40% at 20% 80%,rgba(79,209,165,.1) 0%,transparent 60%);}
+.hero-grid{position:absolute;inset:0;z-index:0;opacity:.2;background-image:linear-gradient(var(–border) 1px,transparent 1px),linear-gradient(90deg,var(–border) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 30%,transparent 100%);}
+.hero-content{position:relative;z-index:1;max-width:680px;}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(–card);border:1px solid var(–border);border-radius:100px;padding:5px 14px 5px 6px;margin-bottom:24px;animation:fadeUp .6s ease both;}
+.hero-badge .bdot{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(–accent),var(–mint));display:flex;align-items:center;justify-content:center;font-size:.65rem;color:#fff;}
+.hero-badge span{font-size:.75rem;font-weight:600;color:var(–text2);}
+.hero-badge em{font-style:normal;color:var(–accent);font-weight:700;}
+.hero-title{font-size:clamp(2.5rem,6vw,4.5rem);margin-bottom:20px;animation:fadeUp .6s .1s ease both;}
+.hero-title .l2{color:var(–accent);}
+.hero-sub{font-size:1.05rem;color:var(–text2);max-width:520px;margin-bottom:32px;animation:fadeUp .6s .2s ease both;}
+.hero-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:48px;animation:fadeUp .6s .3s ease both;}
+.btn-lg{font-size:.95rem;font-weight:700;color:#fff;padding:13px 28px;border-radius:13px;background:var(–accent);transition:all .2s;display:flex;align-items:center;gap:8px;box-shadow:0 6px 22px rgba(77,142,255,.35);}
+.btn-lg:hover{background:var(–accent2);transform:translateY(-2px);}
+.btn-lg-out{font-size:.95rem;font-weight:600;color:var(–text);padding:12px 24px;border-radius:13px;background:var(–card);border:1.5px solid var(–border);transition:all .2s;display:flex;align-items:center;gap:8px;}
+.btn-lg-out:hover{border-color:var(–accent);color:var(–accent);}
+.hero-stats{display:flex;gap:32px;animation:fadeUp .6s .4s ease both;}
+.stat-num{font-family:‘Syne’,sans-serif;font-weight:800;font-size:1.7rem;color:var(–text);letter-spacing:-.02em;}
+.stat-lbl{font-size:.78rem;color:var(–text3);}
+
+/* SECTIONS */
+section{padding:88px 5vw;}
+.tag{display:inline-flex;align-items:center;gap:5px;background:rgba(77,142,255,.12);color:var(–accent);border-radius:100px;padding:4px 13px;margin-bottom:14px;}
+.s-title{font-size:clamp(1.9rem,3.5vw,2.6rem);margin-bottom:14px;}
+.s-sub{font-size:1rem;color:var(–text2);max-width:560px;margin-bottom:48px;}
+
+/* COURSES */
+.courses{background:var(–surface);}
+.courses-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:40px;flex-wrap:wrap;gap:18px;}
+.courses-head .s-sub{margin-bottom:0;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:20px;}
+.cc{border-radius:18px;overflow:hidden;background:var(–card);border:1px solid var(–border);transition:all .22s;cursor:pointer;}
+.cc:hover{transform:translateY(-5px);border-color:var(–accent);box-shadow:0 10px 30px rgba(77,142,255,.15);}
+.cc-thumb{height:140px;display:flex;align-items:center;justify-content:center;font-size:3.5rem;}
+.cc-body{padding:18px;}
+.cc-title{font-family:‘Syne’,sans-serif;font-weight:700;font-size:1.05rem;margin-bottom:6px;color:var(–text);}
+.cc-desc{font-size:.82rem;color:var(–text2);margin-bottom:14px;line-height:1.5;}
+.cc-meta{display:flex;align-items:center;justify-content:space-between;}
+.lvl{font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:20px;}
+.lvl-b{background:rgba(79,209,165,.15);color:var(–mint);}
+.lvl-i{background:rgba(255,179,71,.15);color:var(–gold);}
+.lvl-a{background:rgba(255,107,61,.15);color:#ff6b3d;}
+.cc-lessons{font-size:.75rem;color:var(–text3);}
+.cc-rating{font-size:.75rem;font-weight:600;color:var(–gold);}
+
+/* HOW */
+.how{background:var(–bg);}
+.steps{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:24px;}
+.step{background:var(–card);border-radius:18px;padding:28px 24px;border:1px solid var(–border);transition:all .2s;position:relative;}
+.step:hover{transform:translateY(-3px);border-color:var(–accent);}
+.step-num{font-family:‘Syne’,sans-serif;font-size:3rem;font-weight:800;color:var(–border);line-height:1;position:absolute;top:18px;right:22px;}
+.step-icon{width:48px;height:48px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:16px;}
+.step-title{font-family:‘Syne’,sans-serif;font-weight:700;font-size:1rem;margin-bottom:8px;color:var(–text);}
+.step-desc{font-size:.83rem;color:var(–text2);line-height:1.6;}
+
+/* TESTIMONIALS */
+.tests{background:var(–surface);}
+.t-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:20px;}
+.tc{background:var(–card);border-radius:18px;padding:24px;border:1px solid var(–border);transition:all .2s;}
+.tc:hover{transform:translateY(-3px);border-color:var(–accent);}
+.tc-stars{color:var(–gold);font-size:.95rem;margin-bottom:12px;letter-spacing:2px;}
+.tc-text{font-size:.88rem;color:var(–text2);line-height:1.6;margin-bottom:18px;font-style:italic;}
+.tc-author{display:flex;align-items:center;gap:11px;}
+.tc-av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.05rem;background:var(–surface);border:1px solid var(–border);}
+.tc-name{font-weight:600;font-size:.88rem;color:var(–text);}
+.tc-role{font-size:.74rem;color:var(–text3);}
+
+/* STATS BAND */
+.band{background:var(–accent);color:#fff;padding:48px 5vw;}
+.band-in{display:flex;justify-content:space-around;align-items:center;flex-wrap:wrap;gap:28px;}
+.b-num{font-family:‘Syne’,sans-serif;font-size:2.6rem;font-weight:800;letter-spacing:-.03em;}
+.b-lbl{font-size:.82rem;opacity:.85;margin-top:2px;}
+
+/* FAQ */
+.faq{background:var(–bg);}
+.faq-grid{max-width:700px;margin:0 auto;display:flex;flex-direction:column;gap:10px;}
+.faq-i{background:var(–card);border-radius:13px;border:1px solid var(–border);overflow:hidden;transition:all .2s;}
+.faq-i:hover{border-color:var(–accent);}
+.faq-q{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;cursor:pointer;font-weight:600;font-size:.92rem;color:var(–text);user-select:none;}
+.faq-icn{width:26px;height:26px;border-radius:7px;background:var(–surface);border:1px solid var(–border);display:flex;align-items:center;justify-content:center;font-size:.78rem;flex-shrink:0;transition:all .2s;color:var(–text);}
+.faq-i.open .faq-icn{background:var(–accent);border-color:var(–accent);color:#fff;transform:rotate(45deg);}
+.faq-a{padding:0 22px;max-height:0;overflow:hidden;transition:all .3s;}
+.faq-i.open .faq-a{padding:0 22px 18px;max-height:200px;}
+.faq-a p{font-size:.86rem;color:var(–text2);line-height:1.65;}
+
+/* CTA */
+.cta{background:var(–surface);text-align:center;padding:100px 5vw;position:relative;overflow:hidden;}
+.cta-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 100%,rgba(77,142,255,.3) 0%,transparent 70%);}
+.cta-c{position:relative;z-index:1;max-width:600px;margin:0 auto;}
+.cta .s-title{color:var(–text);font-size:clamp(2rem,4vw,3rem);}
+.cta .s-sub{color:var(–text2);margin:0 auto 32px;}
+.cta-act{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;}
+
+/* FOOTER */
+footer{background:#050505;color:var(–text2);padding:54px 5vw 28px;border-top:1px solid var(–border);}
+.f-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:40px;padding-bottom:36px;border-bottom:1px solid var(–border);margin-bottom:24px;}
+.f-brand .logo{margin-bottom:12px;}
+.f-brand p{font-size:.83rem;line-height:1.65;max-width:280px;}
+.f-col h4{font-family:‘Syne’,sans-serif;font-weight:700;font-size:.82rem;color:var(–text);letter-spacing:.05em;text-transform:uppercase;margin-bottom:14px;}
+.f-col ul{display:flex;flex-direction:column;gap:9px;}
+.f-col ul li a{font-size:.83rem;transition:color .18s;}
+.f-col ul li a:hover{color:var(–accent);}
+.f-bot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;font-size:.8rem;}
+
+/* TOOL PANELS (Search + AI) */
+.tov{position:fixed;inset:0;z-index:1500;background:rgba(0,0,0,.75);backdrop-filter:blur(10px);display:flex;align-items:stretch;justify-content:flex-end;opacity:0;pointer-events:none;transition:opacity .28s;}
+.tov.on{opacity:1;pointer-events:all;}
+.tp{width:min(520px,100vw);background:var(–surface);border-left:1px solid var(–border);display:flex;flex-direction:column;transform:translateX(40px);transition:transform .28s;box-shadow:-8px 0 48px rgba(0,0,0,.6);}
+.tov.on .tp{transform:translateX(0);}
+.tp-h{display:flex;align-items:center;gap:10px;padding:16px 18px;border-bottom:1px solid var(–border);flex-shrink:0;background:var(–card);}
+.tp-h h3{font-family:‘Syne’,sans-serif;font-weight:700;font-size:.95rem;flex:1;color:var(–text);}
+.tp-h .badge{font-size:.65rem;background:rgba(77,142,255,.15);color:var(–accent);padding:2px 8px;border-radius:20px;font-family:‘Syne’,sans-serif;font-weight:700;}
+.tp-x{width:30px;height:30px;border-radius:8px;background:var(–bg);border:1px solid var(–border);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.95rem;color:var(–text3);transition:all .18s;}
+.tp-x:hover{background:var(–accent);color:#fff;border-color:var(–accent);}
+
+/* SEARCH */
+.s-bar{padding:14px 18px;border-bottom:1px solid var(–border);display:flex;gap:8px;flex-shrink:0;}
+.s-in{flex:1;background:var(–card);border:1.5px solid var(–border);border-radius:9px;padding:9px 14px;font-size:.9rem;color:var(–text);transition:border-color .18s;}
+.s-in:focus{border-color:var(–accent);}
+.s-in::placeholder{color:var(–text3);}
+.s-btn{background:var(–accent);color:#fff;border-radius:9px;padding:9px 18px;font-family:‘Syne’,sans-serif;font-weight:700;font-size:.78rem;letter-spacing:1px;}
+.s-btn:hover{background:var(–accent2);}
+.s-home{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(–text3);padding:36px;}
+.s-home .si{font-size:2.8rem;}
+.s-home h4{font-family:‘Syne’,sans-serif;font-weight:700;font-size:.95rem;color:var(–text);}
+.s-home p{font-size:.82rem;text-align:center;line-height:1.55;}
+.qs{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-top:6px;}
+.qs-c{background:var(–card);border:1px solid var(–border);border-radius:20px;padding:5px 12px;font-size:.74rem;font-weight:600;color:var(–text2);cursor:pointer;transition:all .18s;}
+.qs-c:hover{border-color:var(–accent);color:var(–accent);}
+.s-load{flex:1;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(–text3);}
+.spin{width:34px;height:34px;border:3px solid var(–border);border-top-color:var(–accent);border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.s-res{display:none;flex:1;overflow-y:auto;padding:14px 18px;flex-direction:column;gap:4px;}
+.s-meta{font-size:.72rem;color:var(–text3);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(–border);}
+.s-card{padding:12px;border-radius:10px;cursor:pointer;transition:all .18s;border:1px solid transparent;margin-bottom:5px;}
+.s-card:hover{background:var(–card);border-color:var(–accent);}
+.s-url{font-size:.68rem;color:var(–mint);font-weight:600;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.s-url::before{content:’🌐 ’;}
+.s-tit{font-family:‘Syne’,sans-serif;font-weight:700;font-size:.88rem;color:var(–accent);margin-bottom:4px;line-height:1.3;}
+.s-snip{font-size:.8rem;color:var(–text2);line-height:1.5;}
+.s-ans{background:linear-gradient(135deg,rgba(77,142,255,.1),rgba(79,209,165,.06));border:1px solid rgba(77,142,255,.25);border-radius:13px;padding:14px 16px;margin-bottom:14px;}
+.s-ans-l{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(–accent);margin-bottom:5px;}
+.s-ans-t{font-size:.85rem;color:var(–text);line-height:1.55;}
+
+/* AI */
+.ai-msgs{flex:1;overflow-y:auto;padding:14px 18px;display:flex;flex-direction:column;gap:10px;}
+.ai-m{display:flex;gap:8px;animation:fadeUp .25s ease both;}
+.ai-m.user{flex-direction:row-reverse;}
+.ai-av{width:30px;height:30px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.82rem;}
+.ai-m.bot .ai-av{background:linear-gradient(135deg,var(–accent),var(–mint));}
+.ai-m.user .ai-av{background:var(–card);border:1px solid var(–border);}
+.ai-b{max-width:80%;padding:9px 13px;border-radius:13px;font-size:.85rem;line-height:1.55;color:var(–text);}
+.ai-m.bot .ai-b{background:var(–card);border:1px solid var(–border);border-bottom-left-radius:3px;}
+.ai-m.user .ai-b{background:var(–accent);color:#fff;border-bottom-right-radius:3px;}
+.ai-b code{background:rgba(0,0,0,.4);padding:1px 5px;border-radius:4px;font-size:.78rem;font-family:monospace;color:var(–mint);}
+.ai-b pre{background:rgba(0,0,0,.4);border:1px solid var(–border);border-radius:7px;padding:9px 11px;margin:5px 0;font-size:.76rem;overflow-x:auto;white-space:pre-wrap;font-family:monospace;color:var(–text);}
+.ai-b strong{color:var(–accent);}
+.ai-typ{display:flex;gap:4px;align-items:center;padding:4px 0;}
+.ai-typ span{width:5px;height:5px;background:var(–text3);border-radius:50%;animation:tb 1.2s infinite;}
+.ai-typ span:nth-child(2){animation-delay:.2s;}
+.ai-typ span:nth-child(3){animation-delay:.4s;}
+@keyframes tb{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-5px);}}
+.ai-chips{padding:8px 18px;display:flex;gap:5px;flex-wrap:wrap;flex-shrink:0;border-top:1px solid var(–border);}
+.ai-chip{background:var(–card);border:1px solid var(–border);border-radius:20px;padding:4px 11px;font-size:.7rem;font-weight:600;color:var(–text2);cursor:pointer;transition:all .18s;}
+.ai-chip:hover{border-color:var(–accent);color:var(–accent);}
+.ai-warn{margin:6px 18px;padding:9px 12px;background:rgba(255,179,71,.1);border:1px solid rgba(255,179,71,.3);border-radius:9px;font-size:.76rem;color:var(–gold);line-height:1.5;}
+.ai-inp-r{padding:11px 18px;border-top:1px solid var(–border);display:flex;gap:7px;align-items:flex-end;}
+.ai-inp{flex:1;background:var(–card);border:1.5px solid var(–border);border-radius:9px;padding:9px 13px;font-size:.88rem;color:var(–text);resize:none;min-height:40px;max-height:100px;line-height:1.4;transition:border-color .18s;}
+.ai-inp:focus{border-color:var(–accent);}
+.ai-inp::placeholder{color:var(–text3);}
+.ai-snd{width:40px;height:40px;background:var(–accent);border-radius:9px;color:#fff;font-size:.95rem;display:flex;align-items:center;justify-content:center;transition:all .18s;}
+.ai-snd:hover{background:var(–accent2);transform:scale(1.05);}
+.ai-snd.load{background:var(–text3);cursor:not-allowed;transform:none;}
+
+/* LOCK SCREEN */
+.lock{position:fixed;inset:0;z-index:9999;background:#000;display:flex;align-items:center;justify-content:center;padding:20px;overflow:hidden;}
+.lock.hide{opacity:0;pointer-events:none;transition:opacity .5s;}
+.lock-bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 30%,rgba(77,142,255,.15) 0%,transparent 70%),radial-gradient(ellipse 40% 40% at 50% 80%,rgba(79,209,165,.08) 0%,transparent 60%);}
+.lock-grid{position:absolute;inset:0;opacity:.12;background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:50px 50px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 30%,transparent 100%);}
+.lock-card{position:relative;z-index:1;background:rgba(15,15,18,.9);border:1px solid rgba(255,255,255,.08);border-radius:22px;padding:42px 36px;width:100%;max-width:400px;backdrop-filter:blur(20px);box-shadow:var(–shadow);animation:lockUp .6s ease both;}
+@keyframes lockUp{from{opacity:0;transform:translateY(20px) scale(.97);}to{opacity:1;transform:translateY(0) scale(1);}}
+.lock-logo{font-family:‘Syne’,sans-serif;font-weight:800;font-size:1.5rem;color:#fff;display:flex;align-items:center;gap:9px;margin-bottom:28px;justify-content:center;}
+.lock-logo .ld{width:9px;height:9px;border-radius:50%;background:var(–accent);box-shadow:0 0 14px var(–accent);}
+.lock-icn{width:60px;height:60px;margin:0 auto 18px;background:linear-gradient(135deg,var(–accent),var(–mint));border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:1.7rem;box-shadow:0 12px 36px rgba(77,142,255,.3);}
+.lock-tit{font-family:‘Syne’,sans-serif;font-weight:800;font-size:1.3rem;text-align:center;color:#fff;margin-bottom:5px;}
+.lock-sub{text-align:center;font-size:.83rem;color:rgba(255,255,255,.55);margin-bottom:24px;line-height:1.55;}
+.lock-iw{position:relative;margin-bottom:14px;}
+.lock-i{width:100%;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.1);border-radius:11px;padding:13px 44px 13px 15px;font-size:.95rem;color:#fff;letter-spacing:.04em;transition:all .2s;}
+.lock-i:focus{border-color:var(–accent);background:rgba(77,142,255,.08);}
+.lock-i::placeholder{color:rgba(255,255,255,.3);}
+.lock-eye{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:30px;height:30px;border-radius:7px;background:transparent;color:rgba(255,255,255,.4);font-size:.95rem;display:flex;align-items:center;justify-content:center;}
+.lock-eye:hover{color:var(–accent);}
+.lock-btn{width:100%;padding:13px;background:var(–accent);color:#fff;border-radius:11px;font-family:‘Syne’,sans-serif;font-weight:700;font-size:.92rem;letter-spacing:.04em;transition:all .2s;box-shadow:0 8px 22px rgba(77,142,255,.3);}
+.lock-btn:hover{background:var(–accent2);transform:translateY(-1px);}
+.lock-btn:disabled{background:rgba(255,255,255,.1);color:rgba(255,255,255,.3);cursor:not-allowed;box-shadow:none;transform:none;}
+.lock-err{margin-top:13px;padding:10px 13px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:9px;font-size:.78rem;color:#fca5a5;text-align:center;display:none;animation:shk .4s;}
+.lock-err.show{display:block;}
+@keyframes shk{0%,100%{transform:translateX(0);}25%{transform:translateX(-7px);}75%{transform:translateX(7px);}}
+.lock-ftr{margin-top:24px;padding-top:18px;border-top:1px solid rgba(255,255,255,.06);text-align:center;font-size:.72rem;color:rgba(255,255,255,.3);}
+.lock-ftr span{color:var(–accent);font-weight:600;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.reveal{opacity:0;transform:translateY(25px);transition:opacity .6s ease,transform .6s ease;}
+.reveal.vis{opacity:1;transform:translateY(0);}
+
+/* RESPONSIVE */
+@media (max-width:900px){
+.nav-links{display:none;}
+.nav-right .btn-ghost{display:none;}
+.nav-toggle{display:flex;margin-left:auto;}
+.nav-right .btn-primary{display:none;}
+section{padding:60px 5vw;}
+.hero{padding:90px 5vw 50px;}
+.hero-stats{gap:20px;flex-wrap:wrap;}
+.f-grid{grid-template-columns:1fr;gap:28px;}
+.f-bot{flex-direction:column;text-align:center;}
+.band-in{gap:20px;}
+.grid,.t-grid,.steps{grid-template-columns:1fr;max-width:440px;margin:0 auto;}
+.courses-head{flex-direction:column;align-items:flex-start;}
+}
+</style>
+
+</head>
+<body>
+
+<!-- ═══ KILIT EKRANI ═══ -->
+
+<div class="lock" id="lockScreen">
+  <div class="lock-bg"></div>
+  <div class="lock-grid"></div>
+  <div class="lock-card">
+    <div class="lock-logo"><span class="ld"></span>EduVerse</div>
+    <div class="lock-icn">🔐</div>
+    <h2 class="lock-tit">Özel Erişim</h2>
+    <p class="lock-sub">Bu platforma erişmek için<br>özel davet şifrenizi girin.</p>
+    <div class="lock-iw">
+      <input class="lock-i" id="lockIn" type="password" placeholder="Şifre..." autocomplete="off"
+        onkeydown="if(event.key==='Enter')checkPwd()">
+      <button class="lock-eye" onclick="toggleEye()" id="eyeBtn">👁️</button>
+    </div>
+    <button class="lock-btn" id="lockBtn" onclick="checkPwd()">GİRİŞ YAP</button>
+    <div class="lock-err" id="lockErr"></div>
+    <div class="lock-ftr"><span>EduVerse</span> · Davete özel erişim</div>
+  </div>
+</div>
+
+<script>
+// ═══ ŞİFRE KORUMASI ═══
+const PASSWORDS = ["Mero070507"];
+let attempts = 0, lockedUntil = 0;
+
+if (localStorage.getItem("eduverse_unlocked") === "true") {
+  document.getElementById('lockScreen').style.display = 'none';
+} else {
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('lockIn').focus(), 400);
+}
+
+function checkPwd() {
+  const inp = document.getElementById('lockIn');
+  const btn = document.getElementById('lockBtn');
+  const err = document.getElementById('lockErr');
+  const val = inp.value;
+  const now = Date.now();
+  if (lockedUntil > now) {
+    err.textContent = `⏳ Çok fazla deneme. ${Math.ceil((lockedUntil-now)/1000)} saniye bekle.`;
+    err.classList.add('show');
+    return;
+  }
+  if (!val) return;
+  if (PASSWORDS.includes(val)) {
+    btn.disabled = true;
+    btn.textContent = '✓ GİRİŞ BAŞARILI';
+    btn.style.background = 'var(--mint)';
+    err.classList.remove('show');
+    localStorage.setItem("eduverse_unlocked", "true");
+    setTimeout(() => {
+      const lock = document.getElementById('lockScreen');
+      lock.classList.add('hide');
+      document.body.style.overflow = '';
+      setTimeout(() => { lock.style.display = 'none'; }, 500);
+    }, 600);
+  } else {
+    attempts++;
+    inp.value = '';
+    if (attempts >= 5) {
+      lockedUntil = now + 30000;
+      err.textContent = '🚫 5 yanlış. 30 saniye bekle.';
+      attempts = 0;
+    } else {
+      err.textContent = `❌ Yanlış şifre. ${5-attempts} hak kaldı.`;
+    }
+    err.classList.add('show');
+    inp.focus();
+  }
+}
+
+function toggleEye() {
+  const inp = document.getElementById('lockIn');
+  const eye = document.getElementById('eyeBtn');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+  eye.textContent = inp.type === 'password' ? '👁️' : '🙈';
+}
+</script>
+
+<!-- NAV -->
+
+<nav class="nav" id="nav">
+  <a href="#" class="logo"><span class="dot"></span>EduVerse</a>
+  <div class="nav-links">
+    <a href="#kurslar">Kurslar</a>
+    <a href="#nasil">Nasıl Çalışır</a>
+    <a href="#fiyat">Üyelik</a>
+    <a href="#sss">SSS</a>
+  </div>
+  <div class="nav-right">
+    <button class="btn-ghost" onclick="openTool('search')">🔍 Ara</button>
+    <button class="btn-ghost" onclick="openTool('ai')">🤖 AI</button>
+    <button class="btn-primary" onclick="alert('Demo modu — kayıt sistemi yakında!')">Başla</button>
+  </div>
+  <button class="nav-toggle" onclick="document.getElementById('mobMenu').classList.toggle('open')">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE MENU -->
+
+<div class="mob-menu" id="mobMenu">
+  <a href="#kurslar" onclick="closeMob()">Kurslar</a>
+  <a href="#nasil" onclick="closeMob()">Nasıl Çalışır</a>
+  <a href="#fiyat" onclick="closeMob()">Üyelik</a>
+  <a href="#sss" onclick="closeMob()">SSS</a>
+  <div class="sep"></div>
+  <a href="#" onclick="openTool('search');closeMob()">🔍 Web'de Ara</a>
+  <a href="#" onclick="openTool('ai');closeMob()">🤖 AI Asistan</a>
+  <div class="sep"></div>
+  <button class="btn-primary" onclick="alert('Demo modu!');closeMob()">Başla 🚀</button>
+</div>
+
+<!-- HERO -->
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <div class="bdot">✦</div>
+      <span><em>50.000+</em> öğrenci EduVerse'i seçti</span>
+    </div>
+    <h1 class="display hero-title">Dünyayı Anla,<br><span class="l2">Dil Öğren.</span></h1>
+    <p class="hero-sub">Yapay zeka destekli kişiselleştirilmiş dersler, gerçek zamanlı telaffuz analizi ve sertifikalı programlarla hedef dilinize ulaşın.</p>
+    <div class="hero-actions">
+      <button class="btn-lg" onclick="openTool('ai')">🤖 AI ile Başla<span>→</span></button>
+      <button class="btn-lg-out" onclick="document.getElementById('kurslar').scrollIntoView({behavior:'smooth'})">📚 Kursları Gör</button>
+    </div>
+    <div class="hero-stats">
+      <div><div class="stat-num">12+</div><div class="stat-lbl">Dil Kursu</div></div>
+      <div><div class="stat-num">98%</div><div class="stat-lbl">Memnuniyet</div></div>
+      <div><div class="stat-num">3x</div><div class="stat-lbl">Daha Hızlı</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- COURSES -->
+
+<section class="courses" id="kurslar">
+  <div class="courses-head reveal">
+    <div>
+      <div class="tag label">📚 Kurslar</div>
+      <h2 class="display s-title">Hangi Dili<br>Öğrenmek İstiyorsun?</h2>
+    </div>
+    <p class="s-sub">12 dil, 200+ ders, 3 farklı seviye. Hepsini kendi hızında öğren.</p>
+  </div>
+  <div class="grid">
+    <div class="cc reveal" onclick="openTool('ai')"><div class="cc-thumb" style="background:linear-gradient(135deg,#1a237e30,#1565c030)">🇬🇧</div><div class="cc-body"><div class="cc-title">İngilizce</div><div class="cc-desc">Günlük hayattan iş İngilizcesine. IELTS & TOEFL hazırlık dahil.</div><div class="cc-meta"><span class="lvl lvl-b">A1–C2</span><span class="cc-lessons">420 ders</span><span class="cc-rating">★ 4.9</span></div></div></div>
+    <div class="cc reveal" onclick="openTool('ai')"><div class="cc-thumb" style="background:linear-gradient(135deg,#b7150030,#ff572230)">🇩🇪</div><div class="cc-body"><div class="cc-title">Almanca</div><div class="cc-desc">Telaffuzdan gramere. Goethe sertifikası hazırlığı dahil.</div><div class="cc-meta"><span class="lvl lvl-i">A1–B2</span><span class="cc-lessons">280 ders</span><span class="cc-rating">★ 4.8</span></div></div></div>
+    <div class="cc reveal" onclick="openTool('ai')"><div class="cc-thumb" style="background:linear-gradient(135deg,#00227330,#00897b30)">🇯🇵</div><div class="cc-body"><div class="cc-title">Japonca</div><div class="cc-desc">Hiragana, Katakana ve Kanji'yi adım adım öğren.</div><div class="cc-meta"><span class="lvl lvl-b">Başlangıç</span><span class="cc-lessons">310 ders</span><span class="cc-rating">★ 4.9</span></div></div></div>
+    <div class="cc reveal" onclick="openTool('ai')"><div class="cc-thumb" style="background:linear-gradient(135deg,#1a237e30,#e5393530)">🇫🇷</div><div class="cc-body"><div class="cc-title">Fransızca</div><div class="cc-desc">Paris'ten Montreal'e zengin kültür. DELF sertifikası dahil.</div><div class="cc-meta"><span class="lvl lvl-a">A1–C1</span><span class="cc-lessons">355 ders</span><span class="cc-rating">★ 4.8</span></div></div></div>
+    <div class="cc reveal" onclick="openTool('ai')"><div class="cc-thumb" style="background:linear-gradient(135deg,#4a148c30,#e040fb30)">🇰🇷</div><div class="cc-body"><div class="cc-title">Korece</div><div class="cc-desc">K-drama ve K-pop severlere özel içerikler. Hangul'dan başla.</div><div class="cc-meta"><span class="lvl lvl-b">Başlangıç</span><span class="cc-lessons">240 ders</span><span class="cc-rating">★ 4.9</span></div></div></div>
+    <div class="cc reveal" onclick="openTool('ai')"><div class="cc-thumb" style="background:linear-gradient(135deg,#00600030,#43a04730)">🇧🇷</div><div class="cc-body"><div class="cc-title">Portekizce</div><div class="cc-desc">Brezilya ve Avrupa Portekizcesi. Müzikle dil öğren.</div><div class="cc-meta"><span class="lvl lvl-i">A1–B1</span><span class="cc-lessons">195 ders</span><span class="cc-rating">★ 4.7</span></div></div></div>
+  </div>
+</section>
+
+<!-- HOW -->
+
+<section class="how" id="nasil">
+  <div style="text-align:center;max-width:580px;margin:0 auto 48px" class="reveal">
+    <div class="tag label">⚡ Nasıl Çalışır</div>
+    <h2 class="display s-title">4 Adımda<br>Akıcı Konuş</h2>
+    <p class="s-sub" style="margin:0 auto;">Bilimsel yöntemler ve yapay zekanın gücüyle dil öğrenmek artık çok daha kolay.</p>
+  </div>
+  <div class="steps">
+    <div class="step reveal"><div class="step-num">01</div><div class="step-icon" style="background:rgba(77,142,255,.15)">🎯</div><div class="step-title">Seviyeni Belirle</div><div class="step-desc">5 dakikalık adaptif test ile mevcut seviyeni tespit ediyoruz.</div></div>
+    <div class="step reveal"><div class="step-num">02</div><div class="step-icon" style="background:rgba(79,209,165,.15)">📖</div><div class="step-title">Dersleri Tamamla</div><div class="step-desc">Günde 15-20 dakika ile spaced repetition sistemiyle öğren.</div></div>
+    <div class="step reveal"><div class="step-num">03</div><div class="step-icon" style="background:rgba(255,179,71,.15)">🤖</div><div class="step-title">AI ile Pratik</div><div class="step-desc">AI öğretmeninle sınırsız konuşma ve telaffuz pratiği yap.</div></div>
+    <div class="step reveal"><div class="step-num">04</div><div class="step-icon" style="background:rgba(255,107,61,.15)">🏆</div><div class="step-title">Sertifika Al</div><div class="step-desc">Her seviye sonunda dijital sertifikanı indir ve paylaş.</div></div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+
+<section class="tests">
+  <div style="text-align:center;max-width:560px;margin:0 auto 48px" class="reveal">
+    <div class="tag label">💬 Yorumlar</div>
+    <h2 class="display s-title">Öğrencilerimiz<br>Ne Diyor?</h2>
+  </div>
+  <div class="t-grid">
+    <div class="tc reveal"><div class="tc-stars">★★★★★</div><p class="tc-text">"6 ayda İngilizce B2 seviyesine ulaştım. AI öğretmen sayesinde konuşma pratiği yapmaktan artık çekinmiyorum."</p><div class="tc-author"><div class="tc-av" style="background:rgba(77,142,255,.15)">👩</div><div><div class="tc-name">Ayşe Kaya</div><div class="tc-role">Ankara — Öğrenci</div></div></div></div>
+    <div class="tc reveal"><div class="tc-stars">★★★★★</div><p class="tc-text">"Almanya'ya taşınmak için Almanca öğrenmem gerekiyordu. EduVerse ile 8 ayda günlük konuşmayı hallettim."</p><div class="tc-author"><div class="tc-av" style="background:rgba(79,209,165,.15)">👨</div><div><div class="tc-name">Mehmet Demir</div><div class="tc-role">İstanbul — Mühendis</div></div></div></div>
+    <div class="tc reveal"><div class="tc-stars">★★★★★</div><p class="tc-text">"AI ile sohbet etmek hem eğlenceli hem çok verimli. Japonca kursu mükemmel!"</p><div class="tc-author"><div class="tc-av" style="background:rgba(255,107,61,.15)">👩</div><div><div class="tc-name">Zeynep Arslan</div><div class="tc-role">İzmir — Tasarımcı</div></div></div></div>
+  </div>
+</section>
+
+<!-- STATS BAND -->
+
+<div class="band">
+  <div class="band-in">
+    <div class="reveal" style="text-align:center;"><div class="b-num">50K+</div><div class="b-lbl">Aktif Öğrenci</div></div>
+    <div class="reveal" style="text-align:center;"><div class="b-num">12</div><div class="b-lbl">Dil Kursu</div></div>
+    <div class="reveal" style="text-align:center;"><div class="b-num">98%</div><div class="b-lbl">Memnuniyet</div></div>
+    <div class="reveal" style="text-align:center;"><div class="b-num">7/24</div><div class="b-lbl">AI Destek</div></div>
+  </div>
+</div>
+
+<!-- FAQ -->
+
+<section class="faq" id="sss">
+  <div style="text-align:center;max-width:560px;margin:0 auto 48px" class="reveal">
+    <div class="tag label">❓ SSS</div>
+    <h2 class="display s-title">Sıkça Sorulan<br>Sorular</h2>
+  </div>
+  <div class="faq-grid">
+    <div class="faq-i"><div class="faq-q" onclick="tFaq(this)"><span>EduVerse gerçekten ücretsiz mi?</span><div class="faq-icn">+</div></div><div class="faq-a"><p>Ücretsiz planımız sonsuza kadar ücretsizdir. 2 dil kursu ve günlük 15 ders hakkıyla başlayabilirsiniz.</p></div></div>
+    <div class="faq-i"><div class="faq-q" onclick="tFaq(this)"><span>Günde ne kadar zaman ayırmalıyım?</span><div class="faq-icn">+</div></div><div class="faq-a"><p>Günde sadece 15-20 dakika yeterli. Spaced repetition ile kısa süreli düzenli çalışma çok verimli.</p></div></div>
+    <div class="faq-i"><div class="faq-q" onclick="tFaq(this)"><span>AI öğretmen gerçekten işe yarıyor mu?</span><div class="faq-icn">+</div></div><div class="faq-a"><p>Kesinlikle. Sınırsız sabırla pratik yapmanı sağlar. Öğrenme hızı 3 kata kadar artabilir.</p></div></div>
+    <div class="faq-i"><div class="faq-q" onclick="tFaq(this)"><span>Sertifikalar geçerli mi?</span><div class="faq-icn">+</div></div><div class="faq-a"><p>Dijital sertifikalar LinkedIn'de paylaşılabilir. IELTS, TOEFL hazırlık modülleri de var.</p></div></div>
+    <div class="faq-i"><div class="faq-q" onclick="tFaq(this)"><span>Hangi cihazlardan erişebilirim?</span><div class="faq-icn">+</div></div><div class="faq-a"><p>Tüm tarayıcılardan erişilebilir. Mobil uygulamalar yakında. Çevrimdışı mod Pro için.</p></div></div>
+  </div>
+</section>
+
+<!-- CTA -->
+
+<section class="cta">
+  <div class="cta-bg"></div>
+  <div class="cta-c reveal">
+    <div class="tag label" style="justify-content:center">🚀 Başlama Zamanı</div>
+    <h2 class="display s-title">Dil Öğrenmeye<br>Bugün Başla</h2>
+    <p class="s-sub">50.000'den fazla öğrenciye katıl. Ücretsiz hesap aç, ilk dersi hemen başlat.</p>
+    <div class="cta-act">
+      <button class="btn-lg" onclick="openTool('ai')">🤖 AI ile Başla →</button>
+      <button class="btn-lg-out" onclick="openTool('search')">🔍 Web'de Ara</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+
+<footer>
+  <div class="f-grid">
+    <div class="f-brand"><a href="#" class="logo"><span class="dot"></span>EduVerse</a><p>Yapay zeka destekli dil öğrenme platformu. Dünyanın her yerinden öğrencilere erişilebilir, kaliteli eğitim sunuyoruz.</p></div>
+    <div class="f-col"><h4>Kurslar</h4><ul><li><a href="#">İngilizce</a></li><li><a href="#">Almanca</a></li><li><a href="#">Japonca</a></li><li><a href="#">Fransızca</a></li></ul></div>
+    <div class="f-col"><h4>Şirket</h4><ul><li><a href="#">Hakkımızda</a></li><li><a href="#">İletişim</a></li><li><a href="#">Gizlilik</a></li><li><a href="#">Kullanım</a></li></ul></div>
+  </div>
+  <div class="f-bot"><span>© 2025 EduVerse. Tüm hakları saklıdır.</span><span>Yapay zeka ile güçlendirildi 🤖</span></div>
+</footer>
+
+<!-- ═══ SEARCH PANEL ═══ -->
+
+<div class="tov" id="tool-search" onclick="if(event.target===this)closeTool('search')">
+  <div class="tp">
+    <div class="tp-h"><span style="font-size:1.1rem">🦆</span><h3>Web Arama <span class="badge">DuckDuckGo</span></h3><button class="tp-x" onclick="closeTool('search')">✕</button></div>
+    <div class="s-bar">
+      <input class="s-in" id="ddgIn" placeholder="Web'de ara..." onkeydown="if(event.key==='Enter')runSearch()">
+      <button class="s-btn" onclick="runSearch()">ARA</button>
+    </div>
+    <div class="s-home" id="sHome">
+      <div class="si">🦆</div>
+      <h4>Gizlilik Odaklı Arama</h4>
+      <p>Sonuçlar bu panel içinde gösterilir.<br>Hiçbir veriniz takip edilmez.</p>
+      <div class="qs">
+        <div class="qs-c" onclick="qSearch('İngilizce öğrenme ipuçları')">📚 İngilizce</div>
+        <div class="qs-c" onclick="qSearch('Almanca dil sınavı')">🇩🇪 Almanca</div>
+        <div class="qs-c" onclick="qSearch('IELTS hazırlık')">🎓 IELTS</div>
+        <div class="qs-c" onclick="qSearch('yapay zeka nedir')">🤖 AI</div>
+      </div>
+    </div>
+    <div class="s-load" id="sLoad"><div class="spin"></div><p style="font-size:.83rem">Aranıyor...</p></div>
+    <div class="s-res" id="sRes">
+      <div class="s-meta" id="sMeta"></div>
+      <div id="sList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ AI PANEL ═══ -->
+
+<div class="tov" id="tool-ai" onclick="if(event.target===this)closeTool('ai')">
+  <div class="tp">
+    <div class="tp-h"><span style="font-size:1.1rem">🤖</span><h3>AI Asistan <span class="badge">Gemini</span></h3><button class="tp-x" onclick="closeTool('ai')">✕</button></div>
+    <div class="ai-msgs" id="aiMsgs">
+      <div class="ai-m bot"><div class="ai-av">🤖</div><div class="ai-b">Merhaba! Ben EduVerse AI Asistanı, Google Gemini ile çalışıyorum. 🎉<br><br>Dil öğrenmeden kod yazmaya, matematikten genel bilgiye <strong>her konuda</strong> yardımcı olabilirim. Ne sormak istersin?</div></div>
+    </div>
+    <div class="ai-warn" id="aiWarn" style="display:none"></div>
+    <div class="ai-chips" id="aiChips">
+      <div class="ai-chip" onclick="aiChip(this)">🌍 İngilizce pratik</div>
+      <div class="ai-chip" onclick="aiChip(this)">💻 Kod yaz</div>
+      <div class="ai-chip" onclick="aiChip(this)">🧠 Matematik</div>
+      <div class="ai-chip" onclick="aiChip(this)">🌐 Çeviri</div>
+    </div>
+    <div class="ai-inp-r">
+      <textarea class="ai-inp" id="aiIn" placeholder="Her şeyi sorabilirsin..." rows="1"
+        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendAI()}"
+        oninput="this.style.height='40px';this.style.height=Math.min(this.scrollHeight,100)+'px'"></textarea>
+      <button class="ai-snd" id="aiSnd" onclick="sendAI()">➤</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══ NAV ═══
+function closeMob(){document.getElementById('mobMenu').classList.remove('open');}
+
+// ═══ TOOL PANELS ═══
+function openTool(id){document.getElementById('tool-'+id).classList.add('on');document.body.style.overflow='hidden';if(id==='ai')setTimeout(()=>document.getElementById('aiIn').focus(),300);if(id==='search')setTimeout(()=>document.getElementById('ddgIn').focus(),300);}
+function closeTool(id){document.getElementById('tool-'+id).classList.remove('on');document.body.style.overflow='';}
+
+// ═══ DUCKDUCKGO SEARCH (REAL API) ═══
+let lastQ='';
+async function runSearch(){
+  const q=document.getElementById('ddgIn').value.trim();
+  if(!q||q===lastQ)return;
+  lastQ=q;
+  document.getElementById('sHome').style.display='none';
+  document.getElementById('sRes').style.display='none';
+  document.getElementById('sLoad').style.display='flex';
+  try{
+    const res=await fetch(`https://api.duckduckgo.com/?q=${encodeURIComponent(q)}&format=json&no_redirect=1&no_html=1&skip_disambig=1`);
+    const d=await res.json();
+    document.getElementById('sLoad').style.display='none';
+    document.getElementById('sRes').style.display='flex';
+    let html='',count=0;
+    if(d.AbstractText)html+=`<div class="s-ans"><div class="s-ans-l">⚡ Hızlı Cevap</div><div class="s-ans-t">${d.AbstractText}</div>${d.AbstractURL?`<a href="${d.AbstractURL}" target="_blank" style="font-size:.74rem;color:var(--accent);margin-top:8px;display:inline-block">Kaynak →</a>`:''}</div>`;
+    if(d.Answer)html+=`<div class="s-ans"><div class="s-ans-l">💡 Cevap</div><div class="s-ans-t">${d.Answer}</div></div>`;
+    const addCard=(item)=>{
+      if(!item.Text||!item.FirstURL)return;
+      let dom=item.FirstURL;try{dom=new URL(item.FirstURL).hostname.replace('www.','');}catch(e){}
+      html+=`<div class="s-card" onclick="window.open('${item.FirstURL}','_blank')"><div class="s-url">${dom}</div><div class="s-tit">${item.Text.split(' - ')[0]||item.Text.substring(0,80)}</div><div class="s-snip">${item.Text.substring(0,160)}${item.Text.length>160?'...':''}</div></div>`;
+      count++;
+    };
+    if(d.RelatedTopics)d.RelatedTopics.forEach(t=>{if(t.Topics)t.Topics.forEach(addCard);else addCard(t);});
+    if(d.Results)d.Results.forEach(addCard);
+    if(count===0&&!d.AbstractText&&!d.Answer){
+      html=`<div style="text-align:center;padding:30px 14px"><div style="font-size:2.4rem;margin-bottom:10px">🦆</div><p style="font-weight:700;color:var(--text);margin-bottom:8px">"${q}" için sonuçlar</p><p style="font-size:.82rem;color:var(--text2);margin-bottom:18px;line-height:1.6">Sınırlı anlık sonuç var.<br>Tam sonuçlar için:</p><a href="https://duckduckgo.com/?q=${encodeURIComponent(q)}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;padding:10px 20px;border-radius:10px;font-weight:700;font-size:.86rem;text-decoration:none">🦆 DuckDuckGo'da Aç →</a></div>`;
+    }
+    document.getElementById('sList').innerHTML=html;
+    document.getElementById('sMeta').innerHTML=count>0?`🦆 <strong>"${q}"</strong> için <strong>${count}</strong> sonuç`:`🦆 <strong>"${q}"</strong> arandı`;
+  }catch(e){
+    document.getElementById('sLoad').style.display='none';
+    document.getElementById('sRes').style.display='flex';
+    document.getElementById('sList').innerHTML=`<div style="text-align:center;padding:30px"><div style="font-size:2.4rem">⚠️</div><p style="color:var(--text);font-weight:700;margin:8px 0">Bağlantı hatası</p><a href="https://duckduckgo.com/?q=${encodeURIComponent(q)}" target="_blank" style="background:var(--accent);color:#fff;padding:10px 18px;border-radius:9px;font-weight:700;font-size:.84rem;text-decoration:none">DuckDuckGo'da Aç →</a></div>`;
+  }
+}
+function qSearch(q){document.getElementById('ddgIn').value=q;runSearch();}
+
+// ═══ GEMINI AI ═══
+const GEMINI_KEY = "AIzaSyBFwbnBK4DVTrVqm5awxQn1VGeL5I4ShTM";
+let aiHist=[],aiBusy=false;
+
+async function sendAI(){
+  if(aiBusy)return;
+  const inp=document.getElementById('aiIn');
+  const txt=inp.value.trim();
+  if(!txt)return;
+  inp.value='';inp.style.height='40px';
+  addAI('user',txt);
+  document.getElementById('aiChips').style.display='none';
+  hideWarn();
+  if(GEMINI_KEY==="BURAYA_API_KEY_YAPISTIR"){
+    addAI('bot','⚠️ **API anahtarı eklenmemiş.**\n\nGitHub\'da `index.html` dosyasını aç, kalem ✏️ ile düzenle, **GEMINI_KEY** satırını bul ve kendi anahtarını yapıştır.\n\nÜcretsiz al: aistudio.google.com');
+    return;
+  }
+  aiBusy=true;
+  const btn=document.getElementById('aiSnd');
+  btn.classList.add('load');btn.textContent='⏳';
+  showTyp();
+  const contents=aiHist.map(m=>({role:m.role==='bot'?'model':'user',parts:[{text:m.text}]}));
+  contents.push({role:'user',parts:[{text:txt}]});
+  aiHist.push({role:'user',text:txt});
+  try{
+    const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        system_instruction:{parts:[{text:'Sen EduVerse dil eğitim platformunun AI asistanısın. Google Gemini ile çalışıyorsun. Kullanıcının dilinde yanıt ver (Türkçe veya İngilizce). Her konuda yardımcı ol: dil öğrenme, genel bilgi, kod, matematik, çeviri, yaratıcı yazarlık. Markdown kullan, net ve faydalı cevaplar ver.'}]},
+        contents:contents,
+        generationConfig:{maxOutputTokens:2048,temperature:.85}
+      })
+    });
+    rmTyp();
+    if(!res.ok){
+      const e=await res.json().catch(()=>({}));
+      const m=e.error?.message||'Hata';
+      if(res.status===400)showWarn('❌ Geçersiz API anahtarı.');
+      else if(res.status===429)showWarn('⚠️ Rate limit. Biraz bekle.');
+      else showWarn('Hata: '+m);
+      aiHist.pop();
+    }else{
+      const d=await res.json();
+      const r=d.candidates?.[0]?.content?.parts?.[0]?.text||'(Boş)';
+      aiHist.push({role:'bot',text:r});
+      addAI('bot',r);
+    }
+  }catch(e){
+    rmTyp();showWarn('Bağlantı hatası: '+e.message);aiHist.pop();
+  }
+  aiBusy=false;btn.classList.remove('load');btn.textContent='➤';
+}
+function aiChip(el){document.getElementById('aiIn').value=el.textContent.replace(/^[^\s]+\s/,'');sendAI();}
+function addAI(role,raw){
+  const w=document.getElementById('aiMsgs');
+  const d=document.createElement('div');
+  d.className='ai-m '+role;
+  let h=raw.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/```([\s\S]*?)```/g,'<pre>$1</pre>')
+
+```
+.replace(/`([^`]+)`/g,'<code>$1</code>')
+.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+.replace(/\*(.*?)\*/g,'<em>$1</em>')
+.replace(/\n/g,'<br>');
+```
+
+d.innerHTML=`<div class="ai-av">${role==='bot'?'🤖':'👤'}</div><div class="ai-b">${h}</div>`;
+w.appendChild(d);w.scrollTop=w.scrollHeight;
+}
+function showTyp(){
+const w=document.getElementById(‘aiMsgs’);
+const d=document.createElement(‘div’);
+d.className=‘ai-m bot’;d.id=‘typ’;
+d.innerHTML=`<div class="ai-av">🤖</div><div class="ai-b"><div class="ai-typ"><span></span><span></span><span></span></div></div>`;
+w.appendChild(d);w.scrollTop=w.scrollHeight;
+}
+function rmTyp(){const t=document.getElementById(‘typ’);if(t)t.remove();}
+function showWarn(m){const w=document.getElementById(‘aiWarn’);w.textContent=m;w.style.display=‘block’;}
+function hideWarn(){document.getElementById(‘aiWarn’).style.display=‘none’;}
+
+// ═══ FAQ ═══
+function tFaq(el){
+const i=el.closest(’.faq-i’);
+const o=i.classList.contains(‘open’);
+document.querySelectorAll(’.faq-i’).forEach(x=>x.classList.remove(‘open’));
+if(!o)i.classList.add(‘open’);
+}
+
+// ═══ SCROLL REVEAL ═══
+const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add(‘vis’);}),{threshold:.1});
+document.querySelectorAll(’.reveal’).forEach(el=>obs.observe(el));
+
+// ═══ ESC ═══
+document.addEventListener(‘keydown’,e=>{if(e.key===‘Escape’){closeTool(‘search’);closeTool(‘ai’);}});
+</script>
+
+</body>
+</html>
